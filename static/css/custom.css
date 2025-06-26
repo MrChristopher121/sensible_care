@@ -1,0 +1,24 @@
+/*-- static\css\custom.css -- */
+
+.table-wrapper-compact {
+    margin: 0px !important; /* Outer margins */
+    padding: 1rem !important;  /* Internal padding around the table */
+}
+
+.table-sm-custom {
+    font-size: 0.875rem; /* smaller font */
+}
+
+.table-sm-custom td,
+.table-sm-custom th {
+    padding: 0.25rem !important; /* Shrinks vertical and horizontal space inside table cells */
+}
+
+.table-zebra > tbody > tr:nth-of-type(odd) {
+    background-color: #e7f3fc !important; /* light grey for odd rows */
+}
+
+.table-zebra > tbody > tr:hover {
+    background-color: #e7f3fc !important;
+}
+

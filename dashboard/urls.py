@@ -1,4 +1,4 @@
-# pages/urls.py
+# dashboard/urls.py
 from django.urls import path
 from .views import home_page_view, about_page_view, \
     clients_view, clients_new_view, clients_exited_view, \
@@ -29,4 +29,5 @@ urlpatterns = [
     # Case Manager
     path("case-manager/", case_manager_view, name="case-manager"),
 ]
+
 

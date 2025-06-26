@@ -1,3 +1,12 @@
 from django.db import models
 
-# Create your models here.
+class ActiveClient(models.Model):
+    client_id = models.IntegerField(primary_key=True)
+    client_group = models.TextField()
+    client_subgroup = models.TextField()
+    state_code = models.TextField()
+    area = models.TextField()
+
+    class Meta:
+        managed = False  # Don't let Django try to create or modify this
+        db_table = 'active_clients_view'

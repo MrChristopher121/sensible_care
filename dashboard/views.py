@@ -1,5 +1,8 @@
 # pages/views.py 
 from django.shortcuts import render
+from django.core.paginator import Paginator
+from .models import ActiveClient
+
 
 def home_page_view(request):
     context = {
@@ -18,7 +21,16 @@ def about_page_view(request):
 # --------------------------------------------------------
 # Clients Dashboard
 def clients_view(request):
-    return render(request, "clients/clients_active.html")
+    clients = ActiveClient.objects.filter(client_group='HCP').order_by('client_id')
+
+    # Create paginator with 20 rows per page
+    paginator = Paginator(clients, 20) 
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'clients/clients_active.html', {
+        'page_obj': page_obj}
+        )
+    #return render(request, "clients/clients_active.html", {'clients': clients})
 
 def clients_new_view(request):
     return render(request, "clients/clients_new.html")
@@ -55,3 +67,4 @@ def travel_view(request):
 # Case Manager 
 def case_manager_view(request):
     return render(request, "case_manager/case_manager.html")
+

@@ -88,7 +88,7 @@ DATABASES = {
         "HOST": os.getenv("POSTGRES_HOST", "localhost"),  # or use your container host if using Docker
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
         "OPTIONS": {
-            "options": "-c search_path=public"
+            "options": "-c search_path=analytics,public"
             }
     }
 }
