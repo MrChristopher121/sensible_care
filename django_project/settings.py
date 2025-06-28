@@ -113,6 +113,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Redirect user to this URL when not logged in
+LOGIN_URL = '/login/'  
+
+# After login, redirect them to dashboard
+LOGIN_REDIRECT_URL = '/clients/active/'  
+
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 

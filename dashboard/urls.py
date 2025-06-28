@@ -1,5 +1,6 @@
 # dashboard/urls.py
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from .views import home_page_view, about_page_view, \
     clients_view, clients_new_view, clients_exited_view, \
     clients_brokerage_view, clients_external_services_view, \
@@ -9,6 +10,10 @@ from .views import home_page_view, about_page_view, \
 urlpatterns = [
     path("", home_page_view, name="home"),
     path("about/", about_page_view, name="about"),
+
+    # Authentication
+    path("login/", auth_views.LoginView.as_view(template_name="main/login.html"), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(template_name="main/logout.html"), name="logout"),
 
     # Clients dashboard
     path("clients/active/", clients_view, name="clients-active"),

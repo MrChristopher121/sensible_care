@@ -24,14 +24,33 @@
     <body>
         <!-- Wrap both navbars inside a single sticky-top container -->
         <div class="sticky-top">
-        
-            <!-- Logo at top-left -->
             <header class="navbar custom-navbar-white">
+ 
                 <div class="container-fluid d-flex align-items-center justify-content-between">
+        
+                    <!-- Logo at top-left -->
                     <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
                         <img src="{% static 'images/logo-original.svg' %}" 
-                        alt="Sensible Care" height="40" class="me-2">
+                            alt="Sensible Care" height="40" class="me-2">
                     </a>
+
+                    <!-- Logout Section -->
+                    {% if user.is_authenticated %}
+                    <div class="d-flex align-items-center">
+                        <span class="me-3 text-dark">Welcome, {{ user.username }}</span>
+                        
+                        <!-- Show logout form -->
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button 
+                                type="submit" 
+                                class="btn btn-sm"
+                                style="background-color: #ec1f25; color: white;"
+                                >Logout</button>
+                        </form>
+                    </div>
+                    {% endif %}
+
                 </div>
             </header>
 

@@ -3,7 +3,10 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+
+<div class="container text-center mt-5">
     <h2>Welcome to the Home page</h2>
     <p> {{greeting}} </p>
     <p>The current date and time is: {% now "DATETIME_FORMAT" %}</p>
+</div>
 {% endblock %}
