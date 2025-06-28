@@ -21,7 +21,7 @@ def about_page_view(request):
 # --------------------------------------------------------
 # Clients Dashboard
 def clients_view(request):
-    clients = ActiveClient.objects.filter(client_group='HCP').order_by('client_id')
+    clients = ActiveClient.objects.filter(client_group='HCP')
 
     # Create paginator with 20 rows per page
     paginator = Paginator(clients, 20) 
