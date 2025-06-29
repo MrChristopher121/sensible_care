@@ -61,14 +61,169 @@
 
             <!-- Main content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                
+                <!-- Title -->
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2 custom-title">New HCP Clients</h1>
                 </div>
 
-                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-            </main>
-        </div>
+                <!-- Charts -->
+                <div class="row mb-4">
+
+                    <div class="col-md-4">
+                        <div id="chart-new-clients-fytd" style="height:300px;"></div>
+                    </div>
+
+                    <div class="col-md-1 d-flex justify-content-center">
+                        <div style="width: 1px; background-color: #e8e8e8; height: 90%;"></div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div id="chart-new-clients-trend" style="height:300px;"></div>
+                    </div>
+
+                    <div class="col-md-1 d-flex justify-content-center">
+                        <div style="width: 1px; background-color: #e8e8e8; height: 90%;"></div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div id="chart-new-clients-group" style="height:300px";></div>
+                    </div>
+
+                </div>
+            
+                <!-- Paginated Table -->
+                <div class="table-wrapper-compact">
+                    <table 
+                        id="new-clients-table" 
+                        class="display table table-sm-custom table-zebra" 
+                        style="width:100%"
+                    >
+                        <!-- Table header -->
+                        <thead> 
+                            <tr>
+                                <th>ID</th>
+                                <th>Service Start</th>
+                                <th>Group</th>
+                                <th>Subgroup</th>
+                                <th>HCP Level</th>
+                                <th>State</th>
+                                <th>Area</th>
+                                <th>Case Manager</th>
+                            </tr>
+                        </thead>
+                        <!-- Table body -->
+                        <tbody>
+                            {% for client in clients %}
+                            <tr>
+                                <td>{{ client.client_id }}</td>
+                                <td>{{ client.service_start_date }}</td>
+                                <td>{{ client.client_group }}</td>
+                                <td>{{ client.client_subgroup }}</td>
+                                <td>{{ client.hcp_level_name }}</td>
+                                <td>{{ client.state_code }}</td>
+                                <td>{{ client.area }}</td>
+                                <td>{{ client.case_managers }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5">No active clients found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+        </main>
     </div>
+</div>
+
+
+<script>
+const config = {
+        responsive: true,            // Chart auto-resizes
+        displayModeBar: false        // Hides the toolbar
+        };
+
+// Render Plotly chart - New Clients FYTD
+    const client1 = {{clients_fytd_data|safe}};
+
+    const data1 = [{
+        y: client1.map(d => d[0]),             // y-axis names
+        x: client1.map(d => d[1]),             // x-axis values
+        type: "bar",                               // Chart type = bar
+        orientation: "h",                          // Horizontal orientation
+        marker: { color: "#2f3eb1" },              // Bar color
+        text: client1.map(d => d[1]),          // Labels inside bars
+        hoverinfo: "skip",                         // Disable tooltips
+    }];
+
+    const layout1 = {
+        title: {
+            text: "New HCP Clients FYTD",
+            font: { size: 16 }
+        },
+        margin: { l: 20, r: 20, t: 50, b: 175 },  // Padding around the chart
+        xaxis: { visible: false },                 // Hides x-axis
+        yaxis: { automargin: true },               // No clipping
+        showlegend: false,                         // No legend
+        };
+    
+    Plotly.newPlot("chart-new-clients-fytd", data1, layout1, config);
+
+
+// Render Plotly chart - New Clients by State
+    const client2 = {{clients_state_data|safe}}.sort((a, b) => a[1] - b[1]);
+
+    const data2 = [{
+        y: client2.map(d => d[0]),             // y-axis names
+        x: client2.map(d => d[1]),             // x-axis values
+        type: "bar",                               // Chart type = bar
+        orientation: "h",                          // Horizontal orientation
+        marker: { color: "#2f3eb1" },              // Bar color
+        text: client2.map(d => d[1]),          // Labels inside bars
+        hoverinfo: "skip",                         // Disable tooltips
+    }];
+
+    const layout2 = {
+        title: {
+            text: "New HCP Clients by State",
+            font: { size: 16}
+        },
+        margin: { l: 20, r: 20, t: 50, b: 50 },    // Padding around the chart
+        xaxis: { visible: false },                 // Hides x-axis
+        yaxis: { automargin: true },               // No clipping
+        showlegend: false,                         // No legend
+        };
+
+    Plotly.newPlot("chart-new-clients-trend", data2, layout2, config);
+
+
+// Render Plotly chart - New Clients Group
+    const client3 = {{ clients_group_data|safe }}.sort((a, b) => a[1] - b[1]);
+
+    const data3 = [{
+        y: client3.map(d => d[0]),             // y-axis names
+        x: client3.map(d => d[1]),             // x-axis values
+        type: "bar",                               // Chart type = bar
+        orientation: "h",                          // Horizontal orientation
+        marker: { color: "#2f3eb1" },              // Bar color
+        text: client3.map(d => d[1]),          // Labels inside bars
+        hoverinfo: "skip",                         // Disable tooltips
+    }];
+
+    const layout3 = {
+        title: {
+            text: "New HCP Clients by Group",
+            font: { size: 16}
+        },
+        margin: { l: 20, r: 20, t: 50, b: 50 },    // Padding around the chart
+        xaxis: { visible: false },                 // Hides x-axis
+        yaxis: { automargin: true },               // No clipping
+        showlegend: false,                         // No legend
+        };
+
+    Plotly.newPlot("chart-new-clients-group", data3, layout3, config)
+</script>
 
 {% endblock %}

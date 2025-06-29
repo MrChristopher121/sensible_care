@@ -6,6 +6,9 @@ class Client(models.Model):
 
     service_start_date = models.DateField()
     service_end_date = models.DateField()
+
+    service_start_month = models.DateField()
+    service_end_month = models.DateField()
     
     gender = models.TextField()
     marital_status = models.TextField()
@@ -19,6 +22,9 @@ class Client(models.Model):
 
     state_code = models.TextField()
     area = models.TextField()
+
+    service_start_current_fytd = models.BooleanField()
+    service_end_current_fytd = models.BooleanField()
 
     class Meta:
         managed = False  # Don't let Django try to create or modify this

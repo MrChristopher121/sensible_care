@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Count, Q
 from .models import Client
 
 def home_page_view(request):
@@ -20,19 +20,30 @@ def about_page_view(request):
 
 
 # --------------------------------------------------------
-# Clients Dashboard 
+# Active Clients
 @login_required
 def clients_view(request):
-    
     # Page-level filters
-    base_queryset = Client.objects.exclude(client_subgroup='HCP Brokerage').filter(
-        client_group='HCP', active_flag='Active')
+    base_queryset = (
+        Client.objects
+            .exclude(Q(client_subgroup="HCP Brokerage") | Q(hcp_level_name="Other"))
+            .filter(client_group="HCP", active_flag='Active')
+            )
     
-    # Create paginated table
-    paginator = Paginator(base_queryset.order_by('-service_start_date'), 10) 
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
+    # All records
+    clients =  list(
+        base_queryset.values(
+            "client_id",
+            "service_start_date",
+            "client_group",
+            "client_subgroup",
+            "hcp_level_name",
+            "state_code",
+            "area",
+            "case_managers"
+            )
+    )
+    
     # Data for charts
     client_group_data = [
         list(row) for row in base_queryset
@@ -48,33 +59,89 @@ def clients_view(request):
         .values_list("hcp_level_name", "count")
     ]
 
-    area_data = [
+    state_data = [
         list(row) for row in base_queryset
-        .values_list("area")
+        .values_list("state_code")
         .annotate(count=Count("client_id"))
-        .values_list("area", "count")
+        .values_list("state_code", "count")
     ]
 
     return render(request, "clients/clients_active.html", {
-            "page_obj": page_obj,
+            "clients": clients,
             "client_group_data": client_group_data,
             "hcp_level_data": hcp_level_data,
-            "area_data": area_data
+            "state_data": state_data
+            })
+
+# --------------------------------------------------------
+# New Clients
+@login_required
+def clients_new_view(request):
+    # Page-level filters
+    base_queryset = (
+        Client.objects
+            .exclude(client_subgroup="HCP Brokerage")
+            .filter(client_group="HCP", service_start_current_fytd =True)
+            )
+    
+    # All records
+    clients =  list(
+        base_queryset.values(
+            "client_id",
+            "service_start_date",
+            "client_group",
+            "client_subgroup",
+            "hcp_level_name",
+            "state_code",
+            "area",
+            "case_managers"
+            )
+    )
+
+    clients_fytd_data = [
+        list(row) for row in base_queryset
+        .values_list("client_group")
+        .annotate(count=Count("client_id"))
+        .values_list("client_group", "count")
+    ]
+
+    # Data for charts
+    clients_state_data = [
+        list(row) for row in base_queryset
+        .values_list("state_code")
+        .annotate(count=Count("client_id"))
+        .values_list("state_code", "count")
+    ]
+
+    clients_group_data = [
+        list(row) for row in base_queryset
+        .values_list("client_subgroup")
+        .annotate(count=Count("client_id"))
+        .values_list("client_subgroup", "count")
+    ]
+
+    return render(request, "clients/clients_new.html", {
+            "clients": clients,
+            "clients_fytd_data": clients_fytd_data,
+            "clients_state_data": clients_state_data,
+            "clients_group_data": clients_group_data
             })
 
 
-@login_required
-def clients_new_view(request):
-    return render(request, "clients/clients_new.html")
-
+# --------------------------------------------------------
+# Exited Clients
 @login_required
 def clients_exited_view(request):
     return render(request, "clients/clients_exited.html")
 
+# --------------------------------------------------------
+# Brokerage Clients
 @login_required
 def clients_brokerage_view(request):
     return render(request, "clients/clients_brokerage.html")
 
+# --------------------------------------------------------
+# Clients Using External Services
 @login_required
 def clients_external_services_view(request):
     return render(request, "clients/clients_external_services.html")
