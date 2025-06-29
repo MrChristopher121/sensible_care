@@ -135,12 +135,10 @@ LOGIN_REDIRECT_URL = '/clients/active/'
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "UTC"
+LANGUAGE_CODE = "en-au"   # previous: "en-us"
+TIME_ZONE = "Australia/Melbourne"   #previous: "UTC"
 
 USE_I18N = True
-
 USE_TZ = True
 
 
