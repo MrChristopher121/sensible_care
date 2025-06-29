@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url #configure database settings using a single URL string
 import os
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -48,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware', # added WhiteNoise
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -80,18 +83,26 @@ WSGI_APPLICATION = "django_project.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB","sensible_care"),
-        "USER": os.getenv("POSTGRES_USER", "database_user"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "my_password"),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"),  # or use your container host if using Docker
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
-        "OPTIONS": {
-            "options": "-c search_path=analytics,public"
-            }
+    "default": dj_database_url.config(
+            default=os.getenv("POSTGRES_DEFAULT","postgres_default"),
+            conn_max_age=600 
+            )
+        }
+
+# Optional: inject custom search_path
+DATABASES["default"]["OPTIONS"] = {
+    "options": "-c search_path=analytics,public"
     }
-}
+
+
+        #"ENGINE": "django.db.backends.postgresql",
+        #"NAME": os.getenv("POSTGRES_DB","sensible_care"),
+        #"USER": os.getenv("POSTGRES_USER", "database_user"),
+        #"PASSWORD": os.getenv("POSTGRES_PASSWORD", "my_password"),
+        #"HOST": os.getenv("POSTGRES_HOST", "localhost"),  # or use your container host if using Docker
+        #"PORT": os.getenv("POSTGRES_PORT", "5432"),
+
+
 
 
 # Password validation
@@ -135,11 +146,20 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_URL = "/static/"
+
+# This production code might break development mode, so we check whether we're in DEBUG mode
+if not DEBUG:
+    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
+    # and renames the files with unique names for each version to support long-term caching
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-STATICFILES_DIRS = [BASE_DIR / "static"]

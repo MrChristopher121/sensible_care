@@ -64,7 +64,7 @@ $ .venv\Scripts\Activate.ps1
 (.venv) $ git status
 (.venv) $ git add -A
 (.venv) $ git commit -m "Initial commit"
-(.venv) $ git push -u origin main
+(.venv) $ ggit push -u origin main
 
 ```
 
@@ -76,5 +76,6 @@ $ .venv\Scripts\Activate.ps1
 ```
 
 At this point, the app runs at `http://127.0.0.1:8000/`
+
 
 
