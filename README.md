@@ -79,3 +79,7 @@ At this point, the app runs at `http://127.0.0.1:8000/`
 
 
 
+.env has the following variables:
+DEBUG
+SECRET_KEY
+POSTGRES_DEFAULT <-- need to be replaced with render connection string (internal connection)
