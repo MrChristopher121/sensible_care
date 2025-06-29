@@ -8,27 +8,25 @@
     <div class="container-fluid full-height">
         <div class="row">
             
+         <!--------------------------------------------------------------------------------------->
             <!-- Sidebar -->
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
                 <div class="position-sticky pt-3 sidebar-sticky">
                     <ul class="nav flex-column">    
                         
-                    <!-- HCP Clients -->
-                        
+                    <!-- HCP Clients -->  
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{% url 'clients-active' %}">
                                 <span data-feather="users" class="feather-icon"></span>
                                 Active HCP Clients
                             </a>
-                        </li>
-                        
+                        </li>                   
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'clients-new' %}">
                                 <span data-feather="user-plus" class="feather-icon"></span>
                                 New HCP Clients
                             </a>
                         </li>
-                        
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'clients-exited' %}">
                                 <span data-feather="user-minus" class="feather-icon"></span>
@@ -43,9 +41,8 @@
                                 <span data-feather="phone" class="feather-icon"></span>
                                 Brokerage Clients
                             </a>
-                        </li>
+                        </li> 
 
-                    
                     <!-- Clients Receiving External Services -->
                         <hr>
                         <li class="nav-item">
@@ -54,40 +51,48 @@
                                 External Services
                             </a>
                         </li>
-
                     </ul>
                 </div>
             </nav>
 
+
+        <!--------------------------------------------------------------------------------------->
             <!-- Main content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                
+                <!-- Title -->
                 <div
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2 custom-title">Active HCP Clients</h1>
                 </div>
             
+                <!-- Paginated Table -->
                 <div class="table-wrapper-compact">
                     <table class="table table-sm-custom table-zebra table-hover">
-                        <!-- Table Header -->
+                        <!-- Table header -->
                         <thead class="thead-dark">
                             <tr>
                                 <th>ID</th>
+                                <th>Service Start</th>
                                 <th>Group</th>
                                 <th>Subgroup</th>
                                 <th>State</th>
                                 <th>Area</th>
+                                <th>Case Manager</th>
                             </tr>
                         </thead>
                         
-                        <!-- Table Body -->
+                        <!-- Table body -->
                         <tbody>
                             {% for client in page_obj %}
                             <tr>
                                 <td>{{ client.client_id }}</td>
+                                <td>{{ client.service_start_date }}</td>
                                 <td>{{ client.client_group }}</td>
                                 <td>{{ client.client_subgroup }}</td>
                                 <td>{{ client.state_code }}</td>
                                 <td>{{ client.area }}</td>
+                                <td>{{ client.case_managers }}</td>
                             </tr>
                             {% empty %}
                             <tr>
@@ -95,47 +100,43 @@
                             </tr>
                             {% endfor %}
                         </tbody>
-
-                        <!-- Pagination Controls -->
-                        <nav aria-label="Client pagination">
-                            <ul class="pagination justify-content-center">
-
-                                {% if page_obj.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=1">&laquo; First</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                                </li>
-                                {% else %}
-                                <li class="page-item disabled"><span class="page-link">First</span></li>
-                                <li class="page-item disabled"><span class="page-link">Previous</span></li>
-                                {% endif %}
-
-                                <li class="page-item disabled">
-                                <span class="page-link">
-                                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                                </span>
-                                </li>
-
-                                {% if page_obj.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
-                                </li>
-                                {% else %}
-                                <li class="page-item disabled"><span class="page-link">Next</span></li>
-                                <li class="page-item disabled"><span class="page-link">Last</span></li>
-                                {% endif %}
-
-                            </ul>
-                        </nav>
-
                     </table>
+
+                    <!-- Pagination controls -->
+                    <nav aria-label="Client pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">&laquo; First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled"><span class="page-link">First</span></li>
+                            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                            {% endif %}
+
+                            <li class="page-item disabled">
+                            <span class="page-link">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            </span>
+                            </li>
+
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled"><span class="page-link">Next</span></li>
+                            <li class="page-item disabled"><span class="page-link">Last</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
                 </div>
-                
         </main>
     </div>
 </div>

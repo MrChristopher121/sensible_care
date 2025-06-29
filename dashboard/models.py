@@ -1,9 +1,12 @@
 from django.db import models
 
 class Client(models.Model):
-    client_id = models.IntegerField(primary_key=True)
-    
+    client_id = models.IntegerField(primary_key=True)    
     client_name = models.TextField()
+
+    service_start_date = models.DateField()
+    service_end_date = models.DateField()
+    
     gender = models.TextField()
     marital_status = models.TextField()
     age_band = models.TextField()

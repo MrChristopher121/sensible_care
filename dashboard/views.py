@@ -1,4 +1,4 @@
-# pages/views.py 
+# dashboard/views.py 
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -19,19 +19,24 @@ def about_page_view(request):
 
 
 # --------------------------------------------------------
+# Clients Dashboard 
 @login_required
-# Clients Dashboard
 def clients_view(request):
-    clients = Client.objects.filter(client_group='HCP')
-
-    # Create paginator with 20 rows per page
-    paginator = Paginator(clients, 20) 
+    
+    # Create paginated table
+    clients = list(
+        Client.objects
+        .exclude(client_subgroup='HCP Brokerage')
+        .filter(client_group='HCP', active_flag="Active")
+        .order_by('-service_start_date')
+        )
+    paginator = Paginator(clients, 10) 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    
     return render(request, 'clients/clients_active.html', {
         'page_obj': page_obj}
         )
-    #return render(request, "clients/clients_active.html", {'clients': clients})
 
 @login_required
 def clients_new_view(request):

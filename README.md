@@ -26,11 +26,12 @@ $ .venv\Scripts\Activate.ps1
 (.venv) $ git init
 (.venv) $ git remote add origin https://github.com/MrChristopher121/sensible_care.git
 (.venv) $ git branch -M main
+
+(.venv) $ git pull --rebase origin main
 (.venv) $ git status
 (.venv) $ git add -A
-(.venv) $ git commit -m "Initial commit"
+(.venv) $ git commit -m "Update messsage"
 (.venv) $ git push -u origin main
-
 ```
 
 
