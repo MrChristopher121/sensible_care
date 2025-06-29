@@ -65,6 +65,24 @@
                     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2 custom-title">Active HCP Clients</h1>
                 </div>
+
+                <!-- Charts -->
+                <div class="row mb-4">
+
+                    <div class="col-md-4">
+                        <div id="chart-client-group" style="height:300px;"></div>
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <div id="chart-hcp-level" style="height:300PX;"></div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div id="chart-area" style="height:300px";></div>
+                    </div>
+
+                </div>
             
                 <!-- Paginated Table -->
                 <div class="table-wrapper-compact">
@@ -76,6 +94,7 @@
                                 <th>Service Start</th>
                                 <th>Group</th>
                                 <th>Subgroup</th>
+                                <th>HCP Level</th>
                                 <th>State</th>
                                 <th>Area</th>
                                 <th>Case Manager</th>
@@ -90,6 +109,7 @@
                                 <td>{{ client.service_start_date }}</td>
                                 <td>{{ client.client_group }}</td>
                                 <td>{{ client.client_subgroup }}</td>
+                                <td>{{ client.hcp_level_name }}</td>
                                 <td>{{ client.state_code }}</td>
                                 <td>{{ client.area }}</td>
                                 <td>{{ client.case_managers }}</td>
@@ -141,4 +161,66 @@
     </div>
 </div>
 
+
+<script>
+// Render Plotly chart - Clients by Group
+    const clientGroup = {{ client_group_data|safe }};
+
+    const config = {
+        responsive: true,            // Chart auto-resizes
+        displayModeBar: false        // Hides the toolbar
+        };
+
+
+    const data1 = [{
+        y: clientGroup.map(d => d[0]),             // y-axis names
+        x: clientGroup.map(d => d[1]),             // x-axis values
+        type: "bar",                               // Chart type = bar
+        orientation: "h",                          // Horizontal orientation
+        marker: { color: "#2f3eb1" },              // Bar color
+        text: clientGroup.map(d => d[1]),          // Labels inside bars
+        hoverinfo: "skip",                         // Disable tooltips
+    }];
+
+    const layout1 = {
+        title: {
+            text: "Active Clients by Client Group",
+            font: { size: 14 }
+        },
+        margin: { l: 120, r: 20, t: 50, b: 175 },  // Padding around the chart
+        xaxis: { visible: false },                 // Hides x-axis
+        yaxis: { automargin: true },               // No clipping
+        showlegend: false,                         // No legend
+        };
+    
+    Plotly.newPlot("chart-client-group", data1, layout1, config);
+
+
+// Render Plotly chart - Clients by HCP Level
+    const clientHCP = {{ hcp_level_data|safe }};
+
+    const data2 = [{
+        y: clientHCP.map(d => d[0]),             // y-axis names
+        x: clientHCP.map(d => d[1]),             // x-axis values
+        type: "bar",                               // Chart type = bar
+        orientation: "h",                          // Horizontal orientation
+        marker: { color: "#2f3eb1" },              // Bar color
+        text: clientHCP.map(d => d[1]),          // Labels inside bars
+        hoverinfo: "skip",                         // Disable tooltips
+    }];
+
+    const layout2 = {
+        title: {
+            text: "Active Clients by Client Group",
+            font: { size: 14 }
+        },
+        margin: { l: 120, r: 20, t: 50, b: 50 },  // Padding around the chart
+        xaxis: { visible: false },                 // Hides x-axis
+        yaxis: { automargin: true },               // No clipping
+        showlegend: false,                         // No legend
+        };
+
+    Plotly.newPlot("chart-hcp-level", data2, layout2, config)
+
+</script>
 {% endblock %}
